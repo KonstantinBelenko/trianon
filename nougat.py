@@ -38,25 +38,25 @@ class Nougat:
         """)
         self.db.commit()
 
-    def add_concept(self, concept: str, description: str, entity: str) -> None:
+    def add_concept(self, concept: SimilarConcept) -> None:
         self.cursor.execute("""
             INSERT INTO concepts (concept, description, entity) VALUES (?, ?, ?)
-        """, (concept, description, entity))
+        """, (concept.concept, concept.description, concept.entity))
         self.db.commit()
 
-    def remove_concept(self, concept: str) -> None:
+    def remove_concept(self, concept: SimilarConcept) -> None:
         self.cursor.execute("""
-            DELETE FROM concepts WHERE concept = ?
-        """, (concept,))
+            DELETE FROM concepts WHERE concept = ? AND description = ? AND entity = ?
+        """, (concept.concept, concept.description, concept.entity))
         self.db.commit()
 
-    def list_entities(self) -> list:
+    def list_entities(self) -> list[str]:
         self.cursor.execute("""
             SELECT DISTINCT entity FROM concepts
         """)
         return self.cursor.fetchall()
     
-    def find_similar_concepts(self, query: str, entity: str) -> list:
+    def find_similar_concepts(self, query: str, entity: str) -> list[SimilarConcept]:
         # Remove marks and punctuations from the query
         query = query.translate(str.maketrans('', '', self.punctuation_marks))
 
