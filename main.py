@@ -17,8 +17,6 @@ from nougat import Nougat
 from dotenv import load_dotenv
 load_dotenv()
 
-# TODO - Try to implement some simple document notation
-
 nougat = Nougat()
 
 query = input("> ")
